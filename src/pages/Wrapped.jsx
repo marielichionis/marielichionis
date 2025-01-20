@@ -186,12 +186,6 @@ function Wrapped() {
     );
   }
 }
-function showLabel(e, top) {
-  console.log(e);
-  const i = Number(e.id) - 1;
-  document.getElementById(e.id).innerHTML =
-    "You mostly watch these videos around " + top.top10[i].hh[0][0] + " h.";
-}
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
 // dictionary of channels with video id of each
@@ -360,7 +354,6 @@ function favYoutuber(data, channel) {
 
   const h = hou.map((el) => [Number(el[0]), el[1].length]);
   const hh = h.sort((a, b) => b[1] - a[1]);
-  const hourPmonth = hh.map((el) => el[1]);
 
   const d = new yout(channel);
 

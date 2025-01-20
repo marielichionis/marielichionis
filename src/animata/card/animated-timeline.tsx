@@ -110,7 +110,7 @@ const TimelineItem: React.FC<TimelineItemProps> = ({
 
             <div className="tooltiptext offset-8 absolute  whitespace-nowrap rounded bg-black p-2 text-white opacity-1 transition-all duration-300   dark:bg-slate-100 dark:text-slate-900">
               <div className="text-sm font-semibold z-5">
-                You watch these videos mainly around {event.hour}h.
+                You watch these videos mainly around {String(event.hour)}h.
               </div>
             </div>
           </div>

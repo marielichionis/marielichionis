@@ -2,7 +2,7 @@ import { useEffect, useState, useRef } from "react";
 import * as React from "react";
 
 import { cn } from "../../lib/utils.ts";
-import { motion, useInView } from "framer-motion";
+import { useInView } from "framer-motion";
 
 interface GibberishTextProps {
   /**

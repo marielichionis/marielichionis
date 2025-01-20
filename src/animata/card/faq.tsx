@@ -131,11 +131,11 @@ export default function FaqSection({ data }: FaqSectionProps) {
                   </div>
 
                   <div className="relative mt-1 max-w-xs rounded-2xl bg-blue-500 px-4 py-2 text-white">
-                    <img src={IMG_2970} />
+                    <img src={IMG_2970} alt="" />
                     <div className="absolute bottom-0 right-0 h-0 w-0 border-l-[10px] border-t-[10px] border-l-transparent border-t-blue-500" />
                   </div>
                   <div className="relative mt-1 max-w-xs rounded-2xl bg-blue-500 px-4 py-2 text-white">
-                    <img src={IMG_6292} />
+                    <img src={IMG_6292} alt="" />
                     <div className="absolute bottom-0 right-0 h-0 w-0 border-l-[10px] border-t-[10px] border-l-transparent border-t-blue-500" />
                   </div>
                   <div className="relative mt-1 max-w-xs rounded-2xl bg-blue-500 px-4 py-2 text-white">

@@ -1,0 +1,92 @@
+@import url("https://fonts.googleapis.com/css2?family=Asap&display=swap");
+.tooltip {
+  opacity: 1;
+  z-index: 3;
+}
+
+.tooltip:hover .tooltiptext {
+  opacity: 1;
+  z-index: 3;
+}
+.tooltip .tooltiptext {
+  opacity: 0;
+}
+.bod {
+  font-weight: bold;
+  background-color: #0f172a !important;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Mono-sans", sans-serif;
+  color: #e0ffff;
+}
+section {
+  height: 100vh;
+  font-size: 5rem;
+
+  font-weight: bold;
+  display: flex;
+  justify-content: center;
+  white-space: pre-wrap;
+  align-items: center;
+  overflow: auto;
+  text-align: center;
+}
+section:nth-child(1) {
+  color: #e0ffff;
+}
+section:nth-child(2) {
+  color: #e0ffff;
+}
+section:nth-child(3) {
+  color: #e0ffff;
+}
+section:nth-child(4) {
+  color: #e0ffff;
+}
+section:nth-child(5) {
+  flex-direction: column;
+  text-align: left;
+  font-size: 1rem;
+  color: #e0ffff;
+}
+section:nth-child(6) {
+  flex-direction: column;
+  font-size: 1rem;
+  color: #42455a;
+}
+section:nth-child(7) {
+  flex-direction: column;
+  font-size: 1rem;
+  color: #e0ffff;
+  text-align: left;
+}
+h1 {
+  font-size: 5rem;
+  font-weight: bold;
+}
+.first {
+  font-size: 5rem;
+  font-weight: bold;
+  margin: auto;
+}
+.intro {
+  font-size: 3rem;
+  font-weight: bold;
+}
+.reveal.active {
+  opacity: 1;
+}
+.active.fade-bottom {
+  animation: fade-bottom 1s ease-in;
+}
+@keyframes fade-bottom {
+  0% {
+    transform: translateY(50px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}

@@ -4,6 +4,7 @@
   "private": true,
   "proxy": "http://localhost:5001",
   "dependencies": {
+    "@radix-ui/react-accordion": "^1.2.2",
     "bootstrap": "^5.3.3",
     "clsx": "^2.1.1",
     "date-fns": "^4.1.0",

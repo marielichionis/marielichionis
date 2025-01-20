@@ -6,7 +6,7 @@ body {
 }
 .but {
   opacity: 0.8;
-  position: absolute;
+
   top: 0;
   bottom: 0;
   left: 0;
@@ -83,67 +83,7 @@ body {
     transform: translateY(0);
   }
 }
-.blur {
-  opacity: 90%;
-  overflow: hidden;
-  filter: blur(90px);
-}
-.blob {
-  background: radial-gradient(
-    circle,
-    rgba(125, 0, 0, 1) 0%,
-    rgba(0, 0, 0, 1) 100%
-  );
-  animation: animate 10s cubic-bezier(0.68, -0.55, 0.27, 1.55) infinite
-    alternate;
 
-  width: 400px;
-  height: 400px;
-  clip-path: polygon(
-    36% 28%,
-    38% 92%,
-    27% 64%,
-    9% 14%,
-    14% 26%,
-    33% 13%,
-    70% 42%,
-    16% 33%,
-    27% 46%,
-    30% 100%,
-    87% 0%,
-    8% 90%,
-    71% 100%,
-    9% 80%,
-    54% 17%,
-    56% 18%,
-    54% 1%,
-    2% 51%,
-    6% 27%,
-    33% 58%
-  );
-}
-@keyframes animate {
-  0% {
-    translate: 50% 80%;
-    border-radius: 60% 40% 30% 70% / 100% 85% 92% 74%;
-    scale: 1.7;
-  }
-  50% {
-    translate: 0% 90%;
-    border-radius: 0% 71% 47% 70% / 81% 15% 22% 54%;
-    rotate: 90deg;
-    scale: 1.7;
-  }
-  100% {
-    translate: -45% 39%;
-    border-radius: 100% 75% 92% 74% / 60% 80% 30% 70%;
-    rotate: -60deg;
-    scale: 1.7;
-  }
-}
-button {
-  background: rgba(57, 63, 84, 0.8) !important;
-}
 .dropdown-menu {
   border-radius: 10px;
   background-color: rgba(255, 255, 255, 0.75);

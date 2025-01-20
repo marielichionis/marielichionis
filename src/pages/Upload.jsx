@@ -4,7 +4,8 @@ import { Navigate } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.css";
 import { Dropdown } from "react-bootstrap";
 import { format } from "date-fns";
-
+import BlurryBlob from "../animata/Background/blurry-blob.tsx";
+import FaqSection from "../animata/card/faq.tsx";
 import "../styles/Upload.css";
 
 function Upload() {
@@ -75,13 +76,29 @@ function Upload() {
   } else {
     return (
       <div>
-        <div class="blur">
-          <div class="blob"></div>
-        </div>
-        <div class="but">
-          <button class="btn" onClick={openFilePicker}>
-            <div class="file">Select file</div>
-          </button>
+        <BlurryBlob
+          className="z-0 rounded-xl opacity-20"
+          firstBlobColor="bg-purple-400"
+          secondBlobColor="bg-blue-400"
+        />
+        <div className="flex flex-col">
+          <div class="relative but">
+            <button class="relative btn" onClick={openFilePicker}>
+              <div class="file">Select file</div>
+            </button>
+          </div>
+
+          <FaqSection
+            data={[
+              {
+                answer: "Go to https://takeout.google.com/ and Login",
+                icon: "❤️",
+                iconPosition: "right",
+                id: 1,
+                question: "where do i get my data file?",
+              },
+            ]}
+          />
         </div>
       </div>
     );

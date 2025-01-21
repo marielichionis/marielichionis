@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { motion } from "motion/react";
 import AnimatedGradientText from "../text/animated-gradient-text.tsx";
 
@@ -48,10 +48,10 @@ const TimelineItem: React.FC<TimelineItemProps> = ({
   styles,
   customRender,
 }) => {
-  const fillDelay = activeIndex !== null ? Math.max(0, (index - 1) * 0.1) : 0;
+  const fillDelay = activeIndex !== null ? Math.max(0, (index - 1) * 0.01) : 0;
   const fillDuration =
     activeIndex !== null ? Math.max(0.2, 0.5 - index * 0.1) : 0.5;
-  console.log(event);
+
   return (
     <motion.div
       className="flex last:mb-0 "
@@ -59,7 +59,7 @@ const TimelineItem: React.FC<TimelineItemProps> = ({
       onHoverEnd={() => onHover(null)}
       initial={{ opacity: 0, y: 50 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5 }}
+      transition={{ duration: 0.2 }}
     >
       <div className="relative mr-4 flex flex-col items-center">
         <div

@@ -9,14 +9,11 @@ module.exports = {
       colors: {
         foreground: "hsl(var(--foreground))",
         "gray-dark": "#1f2024",
+        "buton-color": "rgba(57, 63, 84, 0.8)",
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
       },
-      borderRadius: {
-        lg: "var(--radius)",
-        md: "calc(var(--radius) - 2px)",
-        sm: "calc(var(--radius) - 4px)",
-      },
+
       boxShadow: {
         glow: "0 0 20px rgba(255, 204, 112, 0.7), 0 0 40px rgba(200, 80, 192, 0.5), 0 0 60px rgba(65, 88, 208, 0.3)",
         glow2:

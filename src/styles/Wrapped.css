@@ -14,7 +14,8 @@
 .bod {
   font-weight: bold;
   background-color: #0f172a !important;
-  margin: 0;
+  margin: auto;
+
   padding: 0;
   box-sizing: border-box;
   font-family: "Mono-sans", sans-serif;
@@ -23,13 +24,11 @@
 section {
   height: 100vh;
   font-size: 5rem;
-
   font-weight: bold;
   display: flex;
   justify-content: center;
   white-space: pre-wrap;
   align-items: center;
-  overflow: auto;
   text-align: center;
 }
 section:nth-child(1) {

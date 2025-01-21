@@ -10,6 +10,7 @@ import BlurryBlob from "../animata/Background/blurry-blob.tsx";
 
 import AnimatedTimelinePage from "../animata/card/animated-timeline.tsx";
 import ScrollReveal from "../animata/text/scroll-reveal.tsx";
+
 import { motion } from "framer-motion";
 import {
   LineChart,
@@ -39,7 +40,8 @@ const months = [
 function Wrapped() {
   const location = useLocation();
   const [activeSeries, setActiveSeries] = React.useState([]);
-  console.log(location.state);
+
+  // if no data
   if (location.state === null) {
     return (
       // does not work
@@ -62,7 +64,7 @@ function Wrapped() {
     const top = calculate(data);
     const info = generalStats(data);
 
-    console.log(info.topMonths);
+    //console.log(info.topMonths);
 
     const events = [];
     for (let i = 1; i <= 12; i++) {
@@ -75,9 +77,10 @@ function Wrapped() {
         hour: info.topMonths[i - 1].topH,
       });
     }
+
     return (
-      <div className="bod scroll-smooth">
-        <section className="">
+      <div className="bod scroll-smooth ">
+        <section>
           <BlurryBlob
             className="z-0 rounded-xl opacity-20"
             firstBlobColor="bg-purple-400"
@@ -100,10 +103,11 @@ function Wrapped() {
 
         <section>
           <ScrollReveal className="md:text-6xl px-10 text-blue-200 dark:text-blue-800">
-            You watched youtube <Counter targetValue={info.tot} /> days in 2024.
+            You watched Youtube <Counter targetValue={info.tot} /> days in 2024.
             You watched {info.avg} videos per day on average! You are mostly on
-            Youtube around {info.hours[0][0]}h. Your most active day was{" "}
-            {info.mostDay[0]} where you watched {info.mostDay[1]} videos.
+            Youtube around {info.hours[0][0]}h.{<br />}
+            Your most active day was {info.mostDay[0]} where you watched{" "}
+            {info.mostDay[1]} videos.
           </ScrollReveal>
         </section>
         {/* Bar chart of hour distribution */}
@@ -112,7 +116,7 @@ function Wrapped() {
 
         <section>
           <ScrollReveal className=" px-10 md:text-6xl text-blue-200 dark:text-blue-800">
-            Your most watched video is {top.vid[0].vid}. You watched it{" "}
+            Your most watched video is "{top.vid[0].vid}". You watched it{" "}
             {top.vid[0].count} times.
           </ScrollReveal>
         </section>
@@ -122,14 +126,14 @@ function Wrapped() {
             Here is your top 10 most watched videos:{" "}
           </p>
           <ol>
-            {top.vid.map((v) => (
+            {top.vid.map((v, i) => (
               <motion.div
                 initial={{ y: 4, opacity: 0 }}
                 whileInView={{ y: 0, opacity: 1 }}
                 transition={{ ease: "easeInOut", duration: 2 }}
               >
-                <li key={v.vid}>
-                  {v.vid} ({v.count} watches)
+                <li key={v.vid} className="text-3xl my-2">
+                  {i + 1}. {v.vid} ({v.count} watches)
                 </li>
               </motion.div>
             ))}
@@ -150,19 +154,25 @@ function Wrapped() {
           Here is your top 10 most watched channels:{" "}
         </p>
         <p className="pl-10">
-          Select the channels you would like to view your watch evolution
-          through {year}!
+          Select the channels for which you would like to view your monthly
+          watches through {year}!
         </p>
 
-        <div className="z-10 flex pl-10">
+        <motion.div
+          initial={{ y: 4, opacity: 0 }}
+          whileInView={{ y: 0, opacity: 1 }}
+          transition={{ ease: "easeInOut", duration: 1 }}
+          className="z-10 grid-cols-2 flex pl-10"
+        >
           <Reminder
             chan={top.chan}
             arr={top.arr}
             activeSeries={activeSeries}
             setActiveSeries={setActiveSeries}
           />
+
           <LineGraph arr={top.arr} activeSeries={activeSeries} />
-        </div>
+        </motion.div>
         {/* Most channel every month */}
 
         <AnimatedTimelinePage
@@ -237,7 +247,8 @@ function LineGraph({ arr, activeSeries }) {
         <YAxis
           label={{
             offset: 10,
-            position: "insideTopRight",
+            angle: -90,
+            position: "insideLeft",
             value: "Nb of watches",
           }}
         />

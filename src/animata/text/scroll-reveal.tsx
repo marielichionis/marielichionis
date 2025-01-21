@@ -9,6 +9,7 @@ interface ScrollRevealProps
     React.HTMLAttributes<HTMLDivElement>,
     HTMLDivElement
   > {
+  containerRef: React.RefObject<HTMLElement>;
   children: React.ReactNode;
   className?: string;
 }
@@ -44,10 +45,11 @@ function OpacityChild({
   total: number;
   progress: MotionValue<number>;
 }) {
+  //opacity relative to scroll position
   const opacity = useTransform(
     progress,
-    [index / total, (index + 1) / total],
-    [0.5, 1]
+    [index / 100, (index + 1) / 100],
+    [0.1, 1]
   );
 
   return (
@@ -58,27 +60,31 @@ function OpacityChild({
 }
 
 export default function ScrollReveal({
+  //containerRef,
+  //scrollYProgress,
   children,
   className,
 }: ScrollRevealProps) {
-  const flat = flatten(children);
-  const count = flat.length;
-  const containerRef = useRef(null);
-
+  const flat = flatten(children); //seperated by words
+  const count = flat.length; // nb of words (including spaces)
+  const ref = useRef(null);
   const { scrollYProgress } = useScroll({
-    container: containerRef,
+    target: ref,
+    offset: ["start center", "center center"],
   });
 
   return (
     <div
-      ref={containerRef}
       className={cn(
         // Adjust the height and spacing according to the need
-        "relative h-full w-full overflow-y-scroll bg-foreground text-background dark:text-zinc-900 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]",
+        "relative h-full w-full  bg-foreground text-background dark:text-zinc-900",
         className
       )}
     >
-      <div className="sticky top-0 flex h-full w-full items-center justify-center">
+      <div
+        ref={ref}
+        className="sticky top-0 flex h-full w-full items-center justify-center"
+      >
         <div className="flex  w-full min-w-fit flex-wrap whitespace-break-spaces p-8">
           {flat.map((child, index) => {
             return (
@@ -86,7 +92,6 @@ export default function ScrollReveal({
                 progress={scrollYProgress}
                 index={index}
                 total={flat.length}
-                key={index}
               >
                 {child}
               </OpacityChild>
@@ -94,10 +99,6 @@ export default function ScrollReveal({
           })}
         </div>
       </div>
-      {Array.from({ length: count }).map((_, index) => (
-        // Create really large area to make the scroll effect work
-        <div key={index} className="h-5" />
-      ))}
     </div>
   );
 }

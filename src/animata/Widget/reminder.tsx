@@ -1,11 +1,14 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { BellDot } from "lucide-react";
 
 import * as React from "react";
 import { cn } from "../../lib/utils.ts";
 
 function ReminderWidget({ chan, arr, activeSeries, setActiveSeries }) {
+  useEffect(() => {
+    setActiveSeries((prev) => [...prev, chan[0].channel]);
+  }, []);
   const [reminder, setReminder] = useState<string[]>(chan);
 
   const handleCheckboxChange = (data: string) => {
@@ -39,20 +42,23 @@ function ReminderWidget({ chan, arr, activeSeries, setActiveSeries }) {
         </div>
       </div>
       <div className="mt-1">
-        {chan.map((chan) => (
+        {chan.map((chan, i) => (
           <div
             key={`item-${chan.channel}`}
             onClick={() => handleCheckboxChange(chan.channel)}
-            className="flex cursor-pointer items-center gap-3  border-b border-zinc-700 py-1"
+            className="flex grid-cols-2 cursor-pointer items-center gap-2  border-b border-zinc-700 py-1"
           >
-            <input
-              type="checkbox"
-              checked={activeSeries.includes(chan.channel)}
-              className="h-3 w-3 appearance-none rounded-full border-2 border-gray-700 checked:bg-blue-500"
-            />
-            <p className="bg-transparenth-auto flex m-0 text-white ">
+            <div>
+              <input
+                id={String(i)}
+                type="checkbox"
+                checked={activeSeries.includes(chan.channel)}
+                className=" h-3 w-3 appearance-none rounded-full border-2 border-gray-700 checked:bg-blue-500"
+              />
+            </div>
+            <div className="bg-transparent m-0 h-auto flex text-white ">
               {chan.channel}
-            </p>
+            </div>
           </div>
         ))}
       </div>

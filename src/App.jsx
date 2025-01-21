@@ -5,6 +5,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 
 const Upload = lazy(() => import("./pages/Upload"));
 const Wrapped = lazy(() => import("./pages/Wrapped"));
+
 function App() {
   return (
     <BrowserRouter>

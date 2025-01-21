@@ -63,11 +63,20 @@ function Upload() {
     } else {
       return (
         // chose your year dropdown
-        <div class="but">
-          <Dropdown class="but">
-            <Dropdown.Toggle>Pick Your Year</Dropdown.Toggle>
-            <Dropdown.Menu>{years}</Dropdown.Menu>
-          </Dropdown>
+        <div>
+          <BlurryBlob
+            className="z-0 rounded-xl opacity-20"
+            firstBlobColor="bg-purple-400"
+            secondBlobColor="bg-blue-400"
+          />
+          <div class="relative but top-0 left-0 right-0 m-auto">
+            <Dropdown class=" but">
+              <Dropdown.Toggle className="!bg-buton-color">
+                Pick Your Year
+              </Dropdown.Toggle>
+              <Dropdown.Menu>{years}</Dropdown.Menu>
+            </Dropdown>
+          </div>
         </div>
       );
     }

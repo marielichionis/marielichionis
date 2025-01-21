@@ -8,7 +8,7 @@ import { cn } from "../../lib/utils.ts";
 function ReminderWidget({ chan, arr, activeSeries, setActiveSeries }) {
   useEffect(() => {
     setActiveSeries((prev) => [...prev, chan[0].channel]);
-  }, []);
+  });
   const [reminder, setReminder] = useState<string[]>(chan);
 
   const handleCheckboxChange = (data: string) => {

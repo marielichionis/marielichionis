@@ -66,7 +66,6 @@ export default function ScrollReveal({
   className,
 }: ScrollRevealProps) {
   const flat = flatten(children); //seperated by words
-  const count = flat.length; // nb of words (including spaces)
   const ref = useRef(null);
   const { scrollYProgress } = useScroll({
     target: ref,

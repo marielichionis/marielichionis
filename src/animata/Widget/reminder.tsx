@@ -7,20 +7,18 @@ import { cn } from "../../lib/utils.ts";
 
 function ReminderWidget({ chan, arr, activeSeries, setActiveSeries }) {
   useEffect(() => {
-    setActiveSeries((prev) => [...prev, chan[0].channel]);
-  });
+    setActiveSeries((prev) => [chan[0].channel]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   const [reminder, setReminder] = useState<string[]>(chan);
 
   const handleCheckboxChange = (data: string) => {
-    console.log(reminder);
     if (!activeSeries.includes(data)) {
       //add to series
       setActiveSeries((prev) => [...prev, data]);
-      console.log(activeSeries);
     } else {
       //delete it
       setActiveSeries(activeSeries.filter((el) => el !== data));
-      console.log(activeSeries);
     }
 
     setReminder((prev) =>
@@ -52,6 +50,7 @@ function ReminderWidget({ chan, arr, activeSeries, setActiveSeries }) {
               <input
                 id={String(i)}
                 type="checkbox"
+                onChange={() => {}}
                 checked={activeSeries.includes(chan.channel)}
                 className=" h-3 w-3 appearance-none rounded-full border-2 border-gray-700 checked:bg-blue-500"
               />

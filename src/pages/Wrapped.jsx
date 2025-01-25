@@ -1,15 +1,23 @@
 import "../styles/Wrapped.css";
-import { useLocation } from "react-router-dom";
+import { data, useLocation } from "react-router-dom";
 import GibberishText from "../animata/text/gibberish-text.tsx";
 import TypingText from "../animata/text/typing-text.tsx";
 import Counter from "../animata/text/counter.tsx";
-
+import { format } from "date-fns";
 import Reminder from "../animata/Widget/reminder.tsx";
-import * as React from "react";
+import React, {
+  useContext,
+  useMemo,
+  useState,
+  useEffect,
+  createContext,
+} from "react";
 import BlurryBlob from "../animata/Background/blurry-blob.tsx";
 
 import AnimatedTimelinePage from "../animata/card/animated-timeline.tsx";
+import FlowerMenu from "../animata/card/flower-menu.tsx";
 import ScrollReveal from "../animata/text/scroll-reveal.tsx";
+import { Year, Data } from "../App.jsx";
 
 import { motion } from "framer-motion";
 import {
@@ -38,7 +46,29 @@ const months = [
 ];
 
 function Wrapped() {
+  const { json, setjson } = useContext(Data);
+  const { aYear, setYear } = useContext(Year);
+  const [data, setData] = useState(null);
   const location = useLocation();
+  // setting the values from upload page
+  useMemo(() => {
+    console.log(location.state);
+    if (json === null) {
+      setjson(location.state.json);
+      setYear(location.state.aYear);
+    }
+  }, [location, json]);
+  // setting the value when we change the year
+  useMemo(() => {
+    if (json != null) {
+      console.log("memo");
+      const data = json.filter(
+        (el) => format(new Date(el.time), "yyyy") === String(aYear)
+      );
+      setData(data);
+    }
+  }, [json, aYear]);
+
   const [activeSeries, setActiveSeries] = React.useState([]);
 
   // if no data
@@ -50,21 +80,21 @@ function Wrapped() {
       </div>
     );
   }
-  const data = location.state.data;
-  const year = location.state.year;
 
-  if (data === undefined) {
-    return (
-      // does not work
-      <div className="warning">
-        <p>Please upload a file first</p>
-      </div>
-    );
-  } else {
+  if (json != null && data != null) {
+    // if no data
+
     const top = calculate(data);
     const info = generalStats(data);
+    console.log(top);
+    console.log(info);
 
-    //console.log(info.topMonths);
+    //range year
+    const range = [];
+    const minYear = json[json.length - 1].time.getFullYear();
+    for (let i = json[0].time.getFullYear(); i >= minYear; i--) {
+      range.push(i);
+    }
 
     const events = [];
     for (let i = 1; i <= 12; i++) {
@@ -80,6 +110,14 @@ function Wrapped() {
 
     return (
       <div className="bod scroll-smooth ">
+        <FlowerMenu
+          animationDuration={700}
+          backgroundColor="rgba(0, 0, 0)"
+          menuItems={range}
+          togglerSize={40}
+          json={json}
+        />
+
         <section>
           <BlurryBlob
             className="z-0 rounded-xl opacity-20"
@@ -88,9 +126,10 @@ function Wrapped() {
           />
           <div>
             <TypingText
-              text={`Your ${year} Youtube Wrapped!`}
+              text={`Your ${aYear} Youtube Wrapped!`}
               waitTime={4000}
             />
+            <div class="loader"></div>
           </div>
         </section>
 
@@ -103,11 +142,19 @@ function Wrapped() {
 
         <section>
           <ScrollReveal className="md:text-6xl px-10 text-blue-200 dark:text-blue-800">
-            You watched Youtube <Counter targetValue={info.tot} /> days in 2024.
-            You watched {info.avg} videos per day on average! You are mostly on
-            Youtube around {info.hours[0][0]}h.{<br />}
-            Your most active day was {info.mostDay[0]} where you watched{" "}
-            {info.mostDay[1]} videos.
+            You watched Youtube{" "}
+            {
+              <p className="text-blue-400">
+                {<Counter targetValue={info.tot} />}
+              </p>
+            }{" "}
+            days in {aYear}. You watched{" "}
+            {<p className="text-blue-400">{Math.round(info.avg)}</p>} videos per
+            day on average! You are mostly on Youtube around{" "}
+            {<p className="text-blue-400">{info.hours[0][0]}h</p>}.Your most
+            active day was {<p className="text-blue-400">{info.mostDay[0]}</p>}{" "}
+            where you watched{" "}
+            {<p className="text-blue-400">{info.mostDay[1]}</p>} videos.
           </ScrollReveal>
         </section>
         {/* Bar chart of hour distribution */}
@@ -116,23 +163,25 @@ function Wrapped() {
 
         <section>
           <ScrollReveal className=" px-10 md:text-6xl text-blue-200 dark:text-blue-800">
-            Your most watched video is "{top.vid[0].vid}". You watched it{" "}
-            {top.vid[0].count} times.
+            Your most watched video is "
+            {<p className="text-blue-400 underline">{top.vid[0].vid}</p>}". You
+            watched it {<p className="text-blue-400">{top.vid[0].count}</p>}{" "}
+            times.
           </ScrollReveal>
         </section>
         {/* Top 10 watched vid */}
-        <section>
-          <p className="intro text-6xl">
+        <section className="flex-col">
+          <p className="text-6xl text-blue-200">
             Here is your top 10 most watched videos:{" "}
           </p>
-          <ol>
+          <ol className="text-left">
             {top.vid.map((v, i) => (
               <motion.div
-                initial={{ y: 4, opacity: 0 }}
+                initial={{ y: 4, opacity: 1 }}
                 whileInView={{ y: 0, opacity: 1 }}
                 transition={{ ease: "easeInOut", duration: 2 }}
               >
-                <li key={v.vid} className="text-3xl my-2">
+                <li key={v.vid} className="text-3xl text-blue-200 my-2">
                   {i + 1}. {v.vid} ({v.count} watches)
                 </li>
               </motion.div>
@@ -141,12 +190,18 @@ function Wrapped() {
         </section>
 
         <section>
-          <ScrollReveal className="intro px-10 text-blue-200 dark:text-blue-800">
-            Your most watched youtube channel is {top.chan[0].channel}. You
-            watched {top.top10[0].diffVids} of their videos for a total of{" "}
-            {top.chan[0].count} times. You peaked in {top.top10[0].month} when
-            you their videos {top.top10[0].num} times. You mostly watch these
-            videos around {top.top10[0].hh[0][0]}h.
+          <ScrollReveal className="text-5xl px-10 text-blue-200 dark:text-blue-800">
+            Your most watched youtube channel is{" "}
+            {<p className="text-blue-400 underline">{top.chan[0].channel}</p>}.
+            You watched{" "}
+            {<p className="text-blue-400">{top.top10[0].diffVids}</p>} of their
+            videos for a total of{" "}
+            {<p className="text-blue-400 ">{top.chan[0].count}</p>} times. You
+            peaked in {<p className="text-blue-400">{top.top10[0].month}</p>}{" "}
+            when you their videos{" "}
+            {<p className="text-blue-400">{top.top10[0].num}</p>}
+            {} times. You mostly watch these videos around{" "}
+            {<p className="text-blue-400 ">{top.top10[0].hh[0][0]}h</p>}.
           </ScrollReveal>
         </section>
 
@@ -155,7 +210,7 @@ function Wrapped() {
         </p>
         <p className="pl-10">
           Select the channels for which you would like to view your monthly
-          watches through {year}!
+          watches through {aYear}!
         </p>
 
         <motion.div
@@ -190,7 +245,7 @@ function Wrapped() {
             lineColor: "#d1d5db",
             titleColor: "white",
           }}
-          title={`${year} Timeline`}
+          title={`${aYear} Timeline`}
         />
       </div>
     );
@@ -280,7 +335,7 @@ function calculate(data) {
     const month = v.time.getMonth();
     const hour = v.time.getHours();
     const day = v.time.getDay();
-
+    //counting channel and videos
     if (videos[v.title] === undefined) {
       videos[v.title] = {
         count: 1,

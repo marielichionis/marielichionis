@@ -1,17 +1,11 @@
 import "../styles/Wrapped.css";
-import { data, useLocation } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import GibberishText from "../animata/text/gibberish-text.tsx";
 import TypingText from "../animata/text/typing-text.tsx";
 import Counter from "../animata/text/counter.tsx";
 import { format } from "date-fns";
 import Reminder from "../animata/Widget/reminder.tsx";
-import React, {
-  useContext,
-  useMemo,
-  useState,
-  useEffect,
-  createContext,
-} from "react";
+import React, { useContext, useEffect, useMemo, useState, Image } from "react";
 import BlurryBlob from "../animata/Background/blurry-blob.tsx";
 
 import AnimatedTimelinePage from "../animata/card/animated-timeline.tsx";
@@ -20,6 +14,7 @@ import ScrollReveal from "../animata/text/scroll-reveal.tsx";
 import { Year, Data } from "../App.jsx";
 
 import { motion } from "framer-motion";
+
 import {
   LineChart,
   Line,
@@ -50,24 +45,25 @@ function Wrapped() {
   const { aYear, setYear } = useContext(Year);
   const [data, setData] = useState(null);
   const location = useLocation();
-  // setting the values from upload page
+  const [t, setIn] = useState(null);
+
   useMemo(() => {
-    console.log(location.state);
+    // setting the values from upload page
     if (json === null) {
       setjson(location.state.json);
       setYear(location.state.aYear);
     }
-  }, [location, json]);
-  // setting the value when we change the year
-  useMemo(() => {
+    // setting the value when we change the year
     if (json != null) {
-      console.log("memo");
-      const data = json.filter(
+      const dat = json.filter(
         (el) => format(new Date(el.time), "yyyy") === String(aYear)
       );
-      setData(data);
+      setData(dat);
+      if (dat != null) {
+        setIn(analyse(dat, json));
+      }
     }
-  }, [json, aYear]);
+  }, [location, json, setYear, setjson, aYear]);
 
   const [activeSeries, setActiveSeries] = React.useState([]);
 
@@ -81,32 +77,8 @@ function Wrapped() {
     );
   }
 
-  if (json != null && data != null) {
-    // if no data
-
-    const top = calculate(data);
-    const info = generalStats(data);
-    console.log(top);
-    console.log(info);
-
-    //range year
-    const range = [];
-    const minYear = json[json.length - 1].time.getFullYear();
-    for (let i = json[0].time.getFullYear(); i >= minYear; i--) {
-      range.push(i);
-    }
-
-    const events = [];
-    for (let i = 1; i <= 12; i++) {
-      events.push({
-        id: String(i),
-        title: months[i - 1],
-        description: `${info.topMonths[i - 1].inf[0]} watched ${
-          info.topMonths[i - 1].inf[1]
-        } times`,
-        hour: info.topMonths[i - 1].topH,
-      });
-    }
+  if (t != null) {
+    const { top, info, range, events } = t;
 
     return (
       <div className="bod scroll-smooth ">
@@ -162,11 +134,17 @@ function Wrapped() {
         {/* Most watched vid */}
 
         <section>
-          <ScrollReveal className=" px-10 md:text-6xl text-blue-200 dark:text-blue-800">
-            Your most watched video is "
-            {<p className="text-blue-400 underline">{top.vid[0].vid}</p>}". You
-            watched it {<p className="text-blue-400">{top.vid[0].count}</p>}{" "}
-            times.
+          <ScrollReveal className=" px-10 text-6xl text-blue-200 dark:text-blue-800">
+            <p>
+              Your most watched video is "
+              {
+                <span className="text-blue-400 hyphens-auto underline">
+                  {top.vid[0].vid}
+                </span>
+              }
+              ". You watched it{" "}
+              {<span className="text-blue-400">{top.vid[0].count}</span>} times.
+            </p>
           </ScrollReveal>
         </section>
         {/* Top 10 watched vid */}
@@ -252,6 +230,36 @@ function Wrapped() {
   }
 }
 
+function analyse(data, json) {
+  const top = calculate(data);
+  const info = generalStats(data);
+  console.log(top);
+  console.log(info);
+
+  const range = [];
+  const minYear = json[json.length - 1].time.getFullYear();
+  for (let i = json[0].time.getFullYear(); i >= minYear; i--) {
+    range.push(i);
+  }
+
+  const events = [];
+
+  for (let i = 1; i <= info.topMonths.length; i++) {
+    events.push({
+      id: String(i),
+      title: months[i - 1],
+      description: `${info.topMonths[i - 1].inf[0]} watched ${
+        info.topMonths[i - 1].inf[1]
+      } times`,
+      hour: info.topMonths[i - 1].topH,
+    });
+  }
+
+  //pictures
+
+  return { top, info, range, events };
+}
+
 //////////////////////////////////////////////////////////////////////////////////////////////////
 // dictionary of channels with video id of each
 function LineGraph({ arr, activeSeries }) {
@@ -324,7 +332,6 @@ function calculate(data) {
   */
 
   const vidCount = {};
-  const videos = {};
   const channelCount = {};
   //parse data
   for (let i in data) {
@@ -332,33 +339,33 @@ function calculate(data) {
 
     //use a fetch for metadata
     const channel = v.subtitles[0].name;
-    const month = v.time.getMonth();
-    const hour = v.time.getHours();
-    const day = v.time.getDay();
     //counting channel and videos
-    if (videos[v.title] === undefined) {
-      videos[v.title] = {
-        count: 1,
-        month: month,
-        hour: hour,
-        day: day,
-        channel: channel,
-        url: v.titleUrl,
-      };
+    if (vidCount[v.title] === undefined) {
+      vidCount[v.title] = { count: 1, url: v.titleUrl };
     } else {
-      videos[v.title].count = videos[v.title].count + 1;
+      vidCount[v.title].count += 1;
     }
 
-    vidCount[v.title] = (vidCount[v.title] || 0) + 1;
-    channelCount[channel] = (channelCount[channel] || 0) + 1;
+    if (channelCount[channel] === undefined) {
+      channelCount[channel] = { count: 1, url: v.subtitles[0].url };
+    } else {
+      channelCount[channel].count += 1;
+    }
   }
-  const sortedVid = Object.entries(vidCount).sort((a, b) => b[1] - a[1]);
-  const sortedChan = Object.entries(channelCount).sort((a, b) => b[1] - a[1]);
+  const sortedVid = Object.entries(vidCount).sort(
+    (a, b) => b[1].count - a[1].count
+  );
+  const sortedChan = Object.entries(channelCount).sort(
+    (a, b) => b[1].count - a[1].count
+  );
 
-  const vid = sortedVid.slice(0, 10).map(([vid, count]) => ({ vid, count }));
+  const vid = sortedVid
+    .slice(0, 10)
+    .map(([vid, { count, url }]) => ({ vid, count, url }));
+
   const chan = sortedChan
     .slice(0, 10)
-    .map(([channel, count]) => ({ channel, count }));
+    .map(([channel, { count, url }]) => ({ channel, count, url }));
 
   // transform data for line graph
   const top10 = [];
@@ -411,7 +418,6 @@ function favYoutuber(data, channel) {
   const s = m.sort((a, b) => b[1] - a[1]);
   const num = s[0][1];
   const month = months[s[0][0]];
-  //console.log(s);
 
   //hour
   const hou = Object.entries(
@@ -421,7 +427,7 @@ function favYoutuber(data, channel) {
   const h = hou.map((el) => [Number(el[0]), el[1].length]);
   const hh = h.sort((a, b) => b[1] - a[1]);
 
-  const d = new yout(channel);
+  const d = new yout(channel); //for graph
 
   s.forEach((e) => {
     var x = months[e[0]];
@@ -498,4 +504,21 @@ function yout(name) {
   };
 }
 
+function pics(p) {
+  const apiKey = "pk_a859ca584be8a0c44599827b9c1f57c28eea98e9";
+  // Make a GET request using the Fetch API
+  fetch(`https://jsonlink.io/api/extract?url=${p}&api_key=${apiKey}`)
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error(`Error: ${response.status} - ${response.statusText}`);
+      }
+      return response.json();
+    })
+    .then((data) => {
+      return data;
+    })
+    .catch((error) => {
+      console.error("An error occurred:", error);
+    });
+}
 export default Wrapped;

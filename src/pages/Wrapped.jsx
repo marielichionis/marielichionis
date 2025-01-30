@@ -5,7 +5,7 @@ import TypingText from "../animata/text/typing-text.tsx";
 import Counter from "../animata/text/counter.tsx";
 import { format } from "date-fns";
 import Reminder from "../animata/Widget/reminder.tsx";
-import React, { useContext, useEffect, useMemo, useState, Image } from "react";
+import React, { useContext, useMemo, useState } from "react";
 import BlurryBlob from "../animata/Background/blurry-blob.tsx";
 
 import AnimatedTimelinePage from "../animata/card/animated-timeline.tsx";
@@ -504,21 +504,4 @@ function yout(name) {
   };
 }
 
-function pics(p) {
-  const apiKey = "pk_a859ca584be8a0c44599827b9c1f57c28eea98e9";
-  // Make a GET request using the Fetch API
-  fetch(`https://jsonlink.io/api/extract?url=${p}&api_key=${apiKey}`)
-    .then((response) => {
-      if (!response.ok) {
-        throw new Error(`Error: ${response.status} - ${response.statusText}`);
-      }
-      return response.json();
-    })
-    .then((data) => {
-      return data;
-    })
-    .catch((error) => {
-      console.error("An error occurred:", error);
-    });
-}
 export default Wrapped;

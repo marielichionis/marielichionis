@@ -10,7 +10,6 @@ function ReminderWidget({ chan, arr, activeSeries, setActiveSeries }) {
     setActiveSeries((prev) => [chan[0].channel]);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-  const [reminder, setReminder] = useState<string[]>(chan);
 
   const handleCheckboxChange = (data: string) => {
     if (!activeSeries.includes(data)) {
@@ -20,12 +19,6 @@ function ReminderWidget({ chan, arr, activeSeries, setActiveSeries }) {
       //delete it
       setActiveSeries(activeSeries.filter((el) => el !== data));
     }
-
-    setReminder((prev) =>
-      prev.includes(data)
-        ? prev.filter((remind) => remind !== data)
-        : [...prev, data]
-    );
   };
 
   return (
